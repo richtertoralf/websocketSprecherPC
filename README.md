@@ -17,6 +17,8 @@ sudo apt install python3-pip
 sudo pip3 install fastapi uvicorn
 sudo pip3 install websockets
 sudo apt install nginx
+mkdir /var/www/html/server
+# in dieses Verzeichnis jetzt die Datei websocket_server.py einfügen
 sudo chown -R www-data:www-data /var/www/html
 sudo chmod -R 755 /var/www/html/
 ```
@@ -32,8 +34,16 @@ http://<IP-Adresse des Servers>
 ## Daten senden
 ```
 # Auf dem Windows-Client, der die Daten senden soll, muss vorab Python3 installiert werden!
+mkdir
+# im Userverzeichnis einen Ordner anlegen
+cd ~
+mkdir Documents\websocket_Server_Project
+# dort dann die Datei json_sender.py einfügen
 # Das Skript json_sender.py sendet Daten im json-Format
+# dann so das Skript starten:
 PS C:\Users\toral\Documents\websocket_Server_Project> python json_sender.py
+
+Im Browser des Empfängers sollten jetzt die Daten im json-Format angezeigt werden.
 ```
 
 
