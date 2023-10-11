@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Datenanzeige</title>
+</head>
+<body>
+    <div id="data-container"></div>
+
+    <script>
+        const socket = new WebSocket("ws://192.168.178.102:8765"); // Die IP-Adresse und der Port des WebSocket-Servers
+
+        socket.onmessage = (event) => {
+            const dataContainer = document.getElementById("data-container");
+            const message = JSON.parse(event.data);
+            dataContainer.innerText = `Empfangene Daten: ${JSON.stringify(message, null, 2)}`;
+        };
+
+        socket.onclose = (event) => {
+            if (event.wasClean) {
+                console.log(`Verbindung geschlossen, Code=${event.code}, Grund=${event.reason}`);
+            } else {
+                console.error("Verbindung abrupt geschlossen");
+            }
+        };
+
+        socket.onerror = (error) => {
+            console.error(`Fehler: ${error.message}`);
+        };
+    </script>
+</body>
+</html>
