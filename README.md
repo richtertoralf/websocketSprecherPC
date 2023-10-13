@@ -32,17 +32,20 @@ python3 /var/www/html/server/websocket_server.py
 ```
 http://<IP-Adresse des Servers>
 ```
-## Daten senden
+## Daten senden (Sprecher-PC)
 ```
-# Auf dem Windows-Client, der die Daten senden soll, muss vorab Python3 installiert werden!
-mkdir
+# Auf dem Windows-Client, der die Daten senden soll, muss vorab Python3 installiert werden,
+# und dann im Terminal die Websocket-Erweiterung:
+pip install websocket-client
 # im Userverzeichnis einen Ordner anlegen
 cd ~
-mkdir Documents\websocket_Server_Project
-# dort dann die Datei json_sender.py einfügen
-# Das Skript json_sender.py sendet Daten im json-Format
+mkdir Documents\parser_sprecher-pc
+# dort dann dort die Datei   
+
+# oder alternativ zur Simulation die Datei json_sender.py einfügen
+# Das Skript json_sender.py sendet Daten im json-Format zum Server
 # dann so das Skript starten:
-PS C:\Users\toral\Documents\websocket_Server_Project> python json_sender.py
+PS C:\Users\toral\Documents\parser_sprecher-pc> python json_sender.py
 
 Im Browser des Empfängers sollten jetzt die Daten im json-Format angezeigt werden.
 ```
