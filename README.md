@@ -63,13 +63,13 @@ Dieses Skript, entwickelt in Python unter Verwendung der Scapy-Bibliothek, ermö
 Das Skript ist so konzipiert, dass es kontinuierlich nach den angegebenen Netzwerkpaketen sucht und sie analysiert. Die analysierten und korrigierten Daten werden in Echtzeit über WebSocket an den Server gesendet, während sie auch auf der Konsole ausgegeben werden, um dem Entwickler einen Überblick über die verarbeiteten Daten zu geben.
 
 #### Datenextraktion, -bereinigung, -strukturierung und versenden:
-Die empfangenen Netzwerkpakete werden analysiert und der Payload wird extrahiert.
-Nicht-ASCII-Zeichen und Leerzeichen werden aus den Rohdaten entfernt, um eine klare, lesbare Datenstruktur zu erstellen.
-Die Daten werden gemäß einem spezifischen Muster analysiert und in ein strukturiertes Format umgewandelt.
-Die extrahierten Daten werden aufbereitet, insbesondere Namen werden von überflüssigen Zeichen befreit und in ein gut lesbares Format gebracht.
-JSON-Formatierung und Übertragung:
-Die strukturierten Daten werden in das JSON-Format konvertiert, um sie besser zu verarbeiten.
-Die JSON-Daten werden über eine WebSocket-Verbindung an einen entfernten Server gesendet.
+- Die empfangenen Netzwerkpakete werden analysiert und der Payload wird extrahiert.
+- Nicht-ASCII-Zeichen und Leerzeichen werden aus den Rohdaten entfernt, um eine klare, lesbare Datenstruktur zu erstellen.
+- Die Daten werden gemäß einem spezifischen Muster analysiert und in ein strukturiertes Format umgewandelt.
+- Die extrahierten Daten werden aufbereitet, insbesondere Namen werden von überflüssigen Zeichen befreit und in ein gut lesbares Format gebracht.
+#### JSON-Formatierung und Übertragung:
+- Die strukturierten Daten werden in das JSON-Format konvertiert, um sie besser zu verarbeiten.
+- Die JSON-Daten werden über eine WebSocket-Verbindung an einen entfernten Server gesendet.
 #### Infos zum Programmablauf:
 ##### Import von Modulen:
 Das Skript beginnt mit dem Import von verschiedenen Python-Bibliotheken:
