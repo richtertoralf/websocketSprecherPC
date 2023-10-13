@@ -37,7 +37,7 @@ python3 /var/www/html/server/websocket_server.py
 ## Empfänger startet Browser
 ```
 http://<IP-Adresse des Servers>
-Für den Test reicht es, die IP Adresse oder Domain des Servers im Browser einzugebe.
+Für den Test reicht es, die IP Adresse oder Domain des Servers im Browser einzugeben.
 ```
 ## Daten senden (Sprecher-PC)
 ```
@@ -73,10 +73,10 @@ Die JSON-Daten werden über eine WebSocket-Verbindung an einen entfernten Server
 #### Infos zum Programmablauf:
 ##### Import von Modulen:
 Das Skript beginnt mit dem Import von verschiedenen Python-Bibliotheken:
-scapy.all: Die Hauptbibliothek, die für das Erfassen und Analysieren von Netzwerkverkehr verwendet wird.
-re: Die regulären Ausdrücke werden verwendet, um bestimmte Muster in den Daten zu finden und zu extrahieren.
-json: Wird verwendet, um die Daten in das JSON-Format zu konvertieren.
-websocket: Diese Bibliothek ermöglicht die WebSocket-Kommunikation.
+- scapy.all: Die Hauptbibliothek, die für das Erfassen und Analysieren von Netzwerkverkehr verwendet wird.
+- re: Die regulären Ausdrücke werden verwendet, um bestimmte Muster in den Daten zu finden und zu extrahieren.
+- json: Wird verwendet, um die Daten in das JSON-Format zu konvertieren.
+- websocket: Diese Bibliothek ermöglicht die WebSocket-Kommunikation.
 ##### Definition von Hilfsfunktionen:
 - clean_data(data): Entfernt Leerzeichen und nicht-ASCII-Zeichen aus den Daten.
 - parse_data(data): Analysiert die sauberen Daten anhand eines spezifischen Musters und extrahiert Rang, Startnummer, Name, Laufzeit und Rückstand.
@@ -99,3 +99,9 @@ Datenverarbeitung:
 Wenn ein Unicode-Decodierungsfehler auftritt, wird er erfasst und ignoriert, um die Programmausführung nicht zu unterbrechen.
 ##### Ausgabe:
 Während des gesamten Prozesses werden verschiedene Informationen, einschließlich der analysierten Daten, auf der Konsole ausgegeben.
+
+### websocket_server.py
+/var/www/html/server/websocket_server.py
+
+### index.html
+/var/www/html/index.html
