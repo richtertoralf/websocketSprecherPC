@@ -101,7 +101,45 @@ Wenn ein Unicode-Decodierungsfehler auftritt, wird er erfasst und ignoriert, um 
 Während des gesamten Prozesses werden verschiedene Informationen, einschließlich der analysierten Daten, auf der Konsole ausgegeben.
 
 ### websocket_server.py
-/var/www/html/server/websocket_server.py
+/var/www/html/server/websocket_server.py  
+Dieses Python-Skript dient als einfacher WebSocket-Server, der auf ankommende Verbindungen lauscht und Nachrichten in Echtzeit an die verbundenen Clients weiterleitet.  
+
+Hier ist eine Beschreibung des Programms:
+##### Importieren von Modulen:
+- asyncio: Ein Framework, das es ermöglicht, asynchrone und parallele Codeausführung in Python zu implementieren.
+- websockets: Eine Bibliothek, die eine asynchrone Schnittstelle für WebSocket-Kommunikation bereitstellt.
+##### Initialisierung des WebSocket-Servers:
+Das Skript initialisiert einen WebSocket-Server, der auf allen verfügbaren Netzwerkschnittstellen ('0.0.0.0') auf Port 8765 lauscht.
+##### Behandlung eingehender Verbindungen:
+Die Funktion server(websocket, path) wird aufgerufen, wenn ein neuer Client eine WebSocket-Verbindung zum Server herstellt.
+Der Server empfängt und sendet Nachrichten in einem asynchronen Kontext.
+##### Verwaltung aktiver Verbindungen:
+- Eine Liste namens connected_clients wird erstellt, um alle aktiven WebSocket-Verbindungen zu speichern.
+- Wenn ein Client sich verbindet, wird seine WebSocket-Verbindung zur connected_clients-Liste hinzugefügt.
+- Wenn eine Nachricht empfangen wird, wird die Nachricht an alle Clients in der connected_clients-Liste weitergeleitet.
+- Wenn eine Verbindung geschlossen wird, wird sie aus der Liste entfernt.
+##### Serverstart und Endlosschleife:
+- Der WebSocket-Server wird gestartet, indem die Funktion websockets.serve() aufgerufen wird.
+- Die Ausführung des Servers wird mit asyncio.get_event_loop().run_until_complete() und asyncio.get_event_loop().run_forever() gesteuert.
+- Der Server bleibt in einer Endlosschleife und wartet auf eingehende Verbindungen.
 
 ### index.html
 /var/www/html/index.html
+HTML-WebSocket-Datenanzeige:  
+Dieses HTML-Dokument dient als WebSocket-Client, der sich mit einem WebSocket-Server verbindet, um empfangene Daten anzuzeigen. Dieses HTML-Skript ermöglicht es einem Benutzer, Daten in Echtzeit von einem WebSocket-Server zu empfangen und anzuzeigen, was besonders nützlich ist, wenn Echtzeitaktualisierungen von Serverdaten benötigt werden. Es bietet eine einfache Möglichkeit, WebSocket-Kommunikation in Webanwendungen zu integrieren und mit dem Server zu interagieren.  
+Hier wird später die Logik, wie sie z.B. beim Sprecher-PC vorhanden ist, integriert.  
+Außerdem erfolgt hier die Aufbereitung und Gestaltung der daten, wie sie als Overlay für einen Livestream benötigt werden.  
+
+##### HTML-Struktur:
+Das Dokument enthält eine div-Element mit der ID data-container, die dazu verwendet wird, die empfangenen Daten anzuzeigen.
+##### JavaScript-Code:
+Das JavaScript-Skript erstellt eine WebSocket-Verbindung zum Server mit der Adresse ws://192.168.10.211:8765.  
+- socket.onmessage: Diese Funktion wird ausgeführt, wenn eine Nachricht vom Server empfangen wird. Die empfangenen Daten werden aus dem JSON-Format geparst und im data-container-Element angezeigt.
+- socket.onclose: Diese Funktion wird aufgerufen, wenn die Verbindung geschlossen wird. Sie gibt Informationen zum Schließgrund aus, sei es ein regulärer Schließvorgang oder ein abrupter Abbruch.
+- socket.onerror: Diese Funktion wird ausgeführt, wenn ein Fehler während der Verbindung auftritt. Der Fehler wird in der Konsole angezeigt.  
+##### Programmablauf:
+- Die HTML-Seite wird geladen und das JavaScript-Skript wird aktiviert.
+- Ein WebSocket wird erstellt und eine Verbindung zum Server unter der angegebenen IP-Adresse und dem Port hergestellt.
+- Wenn eine Nachricht vom Server empfangen wird, wird sie geparst und im data-container-Element angezeigt.
+- Wenn die Verbindung geschlossen wird, werden entsprechende Informationen in der Konsole ausgegeben.
+- Wenn ein Fehler während der Verbindung auftritt, wird die Fehlermeldung ebenfalls in der Konsole angezeigt.
