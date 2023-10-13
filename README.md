@@ -2,9 +2,10 @@
 Einfaches Beispiel für eine Datenübertragung per websocket und Python als Backendanwendung
 ```
 Sender    ----------------->    Server    ----------------->    Empfänger (Browser)
- 
-json_sender.py  ---->    /var/www/html/server/websocket_server.py
-                         /var/www/html/index.html
+
+sprecherPC_scrapy_parser.py 
+(json_sender.py)  --------->    /var/www/html/server/websocket_server.py
+                                          ----------------->    /var/www/html/index.html
 ```
 ## Installation des Servers (Ubuntu 22.04)
 ```
