@@ -1,5 +1,5 @@
 # websocketSprecherPC
-Einfaches Beispiel für eine Datenübertragung per websocket und Python als Backendanwendung
+Einfaches Beispiel für eine Datenübertragung per websocket und Python vom Sprecher-PC zum Server:  
 ```
 Sender    ----------------->    Server    ----------------->    Empfänger
 Sprecher-PC                     z.B. Ubuntu 22.04               beliebiger Browser
@@ -59,8 +59,8 @@ Im Browser des Empfängers sollten jetzt die Daten im json-Format angezeigt werd
 
 ## Details zu den Programmen
 ### sprecherPC_scrapy_parser.py
-Dieses Skript, entwickelt in Python unter Verwendung der Scapy-Bibliothek, ermöglicht die Extraktion von Daten aus dem Netzwerkverkehr. Es ist speziell für den Empfang von Paketen zwischen einem PC auf dem Winlaufen (IP-Adresse '192.168.100.10') und einem PC, auf dem das Programm Sprecher-PC (IP Adresse '192.168.100.20') läuft. Es wird eine spezifizierte Netzwerkschnittstelle abgehört. Da keine Angaben zum verwendeten Protokoll vorlag, wurde der Netzwerkverkehr mit Wireshark mitgeschnitten und dann ein Parser entwickelt, der aus den Rohdaten nutzbare Daten extrahiert.  
-Das Skript ist so konzipiert, dass es kontinuierlich nach den angegebenen Netzwerkpaketen sucht und sie analysiert. Die analysierten und korrigierten Daten werden in Echtzeit über WebSocket an den Server gesendet, während sie auch auf der Konsole ausgegeben werden, um dem Entwickler einen Überblick über die verarbeiteten Daten zu geben.
+Dieses Skript, entwickelt in Python unter Verwendung der Scapy-Bibliothek, ermöglicht die Erkennung und Extraktion von Daten aus dem Netzwerkverkehr. Im Beispiel wird geziehlt nach Paketen zwischen einem PC auf dem Winlaufen (IP-Adresse '192.168.100.10') und einem PC, auf dem das Programm Sprecher-PC (IP Adresse '192.168.100.20') läuft, gesucht. Es wird eine konkrete Netzwerkschnittstelle abgehört. Da keine Angaben zum verwendeten Protokoll vorlag, wurde der Netzwerkverkehr mit Wireshark mitgeschnitten und dann von mir ein Parser entwickelt, der aus den Rohdaten nutzbare Daten extrahiert. Zum Sprecher-PC werden noch mehr Daten übertragen, als die ich in diesem Beispiel extrahiere.  
+Das Skript ist so konzipiert, dass es kontinuierlich nach den angegebenen Netzwerkpaketen sucht und sie analysiert. Die analysierten und dann gefilterten und aufbereiteten Daten werden in Echtzeit über WebSocket an den Server gesendet, während sie auch auf der Konsole ausgegeben werden, um dem Entwickler einen Überblick über die verarbeiteten Daten zu geben.
 #### Datenstruktur Winlaufen -> Sprecher-PC
 Da mir keine Angaben zur Schnittstelle und zur Datenstruktur zur Verfügung standen, musste sehr aufwendig im Datenstrom gesucht werden.
 ```
@@ -108,11 +108,10 @@ sq~sq~uq~q~q~q~q~q~q~q~q~q~q~q~q~q~q~q~q~q~q~q~q~q~q~uq~q~sq~sq~sq~uq~#t1t201tNE
 
 #### Datenextraktion, -bereinigung, -strukturierung und versenden:
 - Die empfangenen Netzwerkpakete werden analysiert und der Payload wird extrahiert.
-- Nicht-ASCII-Zeichen und Leerzeichen werden aus den Rohdaten entfernt, um eine klare, lesbare Datenstruktur zu erstellen.
-- Die Daten werden gemäß einem spezifischen Muster analysiert und in ein strukturiertes Format umgewandelt.
-- Die extrahierten Daten werden aufbereitet, insbesondere Namen werden von überflüssigen Zeichen befreit und in ein gut lesbares Format gebracht.
+- Nicht-ASCII-Zeichen und Leerzeichen werden aus den Rohdaten entfernt, um eine lesbarere Datenstruktur zu erstellen.
+- Die Daten werden gemäß einem spezifischen Muster analysiert und in ein strukturierteres Format umgewandelt.
 #### JSON-Formatierung und Übertragung:
-- Die strukturierten Daten werden in das JSON-Format konvertiert, um sie besser zu verarbeiten.
+- Die strukturierten Daten werden in das JSON-Format konvertiert, um sie später leichter verarbeiten zu können.
 - Die JSON-Daten werden über eine WebSocket-Verbindung an einen entfernten Server gesendet.
 #### Infos zum Programmablauf:
 ##### Import von Modulen:
@@ -129,31 +128,30 @@ Das Skript beginnt mit dem Import von verschiedenen Python-Bibliotheken:
 ##### Programmablauf:
 - Es wird überprüft, ob das Paket die gewünschten Kriterien erfüllt: IP-Quell- und Zieladressen sowie spezifische TCP-Flags.
 - Der Payload des TCP-Pakets wird als Rohdaten extrahiert.  
-Datenverarbeitung:  
-- Die Rohdaten werden zuerst in Hexadezimalformat konvertiert.
-- Dann werden nicht druckbare Zeichen und '00'-Bytes entfernt, um saubere Hex-Daten zu erhalten.
-- Die Hex-Daten werden in ein UTF-8-Zeichenkette umgewandelt, wobei Nicht-ASCII-Zeichen ignoriert werden. Dies ist der Punkt, an dem die Daten für die weitere Verarbeitung bereit sind.
-- Die extrahierten Daten werden nach dem definierten Muster analysiert und in ein strukturiertes Format umgewandelt.
-- Die Namen werden korrigiert, indem überflüssige Zeichen entfernt und Leerzeichen hinzugefügt werden.
+###### Datenverarbeitung:  
+- Die Rohdaten werden zuerst ins Hexadezimalformat konvertiert.
+- Dann werden nicht druckbare Zeichen und '00'-Bytes entfernt, um sauberere Hex-Daten zu erhalten.
+- Die Hex-Daten werden in ein UTF-8-Zeichenkette umgewandelt, wobei Nicht-ASCII-Zeichen ignoriert werden. Dies ist der Punkt, an dem die Daten für die weitere Verarbeitung bereit sind. Vermutlich verliere ich hier die deutschen Umlaute. Das muss nochmal überarbeitet werden.
+- Die extrahierten Daten werden nach dem definierten Muster analysiert und in ein strukturiertes Format umgewandelt. Es wird gezielt nach Rang, Startnummer, Name, Laufzeit und Rückstand gesucht.
+- Die Namen werden korrigiert, indem überflüssige Zeichen entfernt werden. Die Namen werden nicht unbedingt benötigt, da es aus dem Programm Winlaufen einen separaten Export der Starliste (Startlist.csv) gibt und daraus dann auf dem Server oder letztlich  der Frontendanwendung, Name, Verein, Nation, Altersklasse/Kategorie abgeglichen werden können.
 ##### Datenübertragung über WebSocket:
 - Die strukturierten Daten werden in das JSON-Format konvertiert.
 - Eine WebSocket-Verbindung wird zu einem entfernten Server (mit der angegebenen IP-Adresse und dem Port) hergestellt.
 - Die JSON-Daten werden über die WebSocket-Verbindung an den Server gesendet.
 ##### Fehlerbehandlung:
-Wenn ein Unicode-Decodierungsfehler auftritt, wird er erfasst und ignoriert, um die Programmausführung nicht zu unterbrechen.
+Wenn ein Unicode-Decodierungsfehler auftritt, wird er erfasst und ignoriert, um die Programmausführung nicht zu unterbrechen. Das kann passieren, da zwischen dem Winlaufe und dem Sprecher-PC noch mehr Datenverkehr stattfindet, als von mir ausgewertet wird.
 ##### Ausgabe:
 Während des gesamten Prozesses werden verschiedene Informationen, einschließlich der analysierten Daten, auf der Konsole ausgegeben.
-
 ### websocket_server.py
 /var/www/html/server/websocket_server.py  
 Dieses Python-Skript dient als einfacher WebSocket-Server, der auf ankommende Verbindungen lauscht und Nachrichten in Echtzeit an die verbundenen Clients weiterleitet.  
-
+Akzuell findet hier keine Verarbeitung der Daten statt. Sinnvoll wäre aber eine Erfassung der daten in einer Datenbank, um bei Verbindungsproblemen trotzdem über einen Datenbestand zur Weiterverarbetung zu verfügen. Alternativ könnten die Daten aber auch auf den Clients in einer Frontendanwendung gespeichert werden.
 Hier ist eine Beschreibung des Programms:
 ##### Importieren von Modulen:
 - asyncio: Ein Framework, das es ermöglicht, asynchrone und parallele Codeausführung in Python zu implementieren.
 - websockets: Eine Bibliothek, die eine asynchrone Schnittstelle für WebSocket-Kommunikation bereitstellt.
 ##### Initialisierung des WebSocket-Servers:
-Das Skript initialisiert einen WebSocket-Server, der auf allen verfügbaren Netzwerkschnittstellen ('0.0.0.0') auf Port 8765 lauscht.
+Das Skript initialisiert einen WebSocket-Server, der auf allen verfügbaren Netzwerkschnittstellen ('0.0.0.0') auf Port 8765 lauscht. Aktuell sind noch keinerlei Sicherheitsaspekte berücksichtigt. Eine Authentifizierung sollte mindestens noch eingebaut werden. Auch eine VPN-Verbindung wäre sinnvol.
 ##### Behandlung eingehender Verbindungen:
 Die Funktion server(websocket, path) wird aufgerufen, wenn ein neuer Client eine WebSocket-Verbindung zum Server herstellt.
 Der Server empfängt und sendet Nachrichten in einem asynchronen Kontext.
@@ -162,20 +160,19 @@ Der Server empfängt und sendet Nachrichten in einem asynchronen Kontext.
 - Wenn ein Client sich verbindet, wird seine WebSocket-Verbindung zur connected_clients-Liste hinzugefügt.
 - Wenn eine Nachricht empfangen wird, wird die Nachricht an alle Clients in der connected_clients-Liste weitergeleitet.
 - Wenn eine Verbindung geschlossen wird, wird sie aus der Liste entfernt.
+Auch bei der Verbindung vom Client zum Server sind noch keine Sicherheitsaspekte berücksichtigt.
 ##### Serverstart und Endlosschleife:
 - Der WebSocket-Server wird gestartet, indem die Funktion websockets.serve() aufgerufen wird.
 - Die Ausführung des Servers wird mit asyncio.get_event_loop().run_until_complete() und asyncio.get_event_loop().run_forever() gesteuert.
 - Der Server bleibt in einer Endlosschleife und wartet auf eingehende Verbindungen.
-
 ### index.html
 /var/www/html/index.html
 HTML-WebSocket-Datenanzeige:  
 Dieses HTML-Dokument dient als WebSocket-Client, der sich mit einem WebSocket-Server verbindet, um empfangene Daten anzuzeigen. Dieses HTML-Skript ermöglicht es einem Benutzer, Daten in Echtzeit von einem WebSocket-Server zu empfangen und anzuzeigen, was besonders nützlich ist, wenn Echtzeitaktualisierungen von Serverdaten benötigt werden. Es bietet eine einfache Möglichkeit, WebSocket-Kommunikation in Webanwendungen zu integrieren und mit dem Server zu interagieren.  
 Hier wird später die Logik, wie sie z.B. beim Sprecher-PC vorhanden ist, integriert.  
-Außerdem erfolgt hier die Aufbereitung und Gestaltung der daten, wie sie als Overlay für einen Livestream benötigt werden.  
-
+Außerdem erfolgt hier die Aufbereitung und Gestaltung der Daten, wie sie als Overlay für einen Livestream benötigt werden.  
 ##### HTML-Struktur:
-Das Dokument enthält eine div-Element mit der ID data-container, die dazu verwendet wird, die empfangenen Daten anzuzeigen.
+Das Dokument enthält ein div-Element mit der ID data-container, die dazu verwendet wird, die empfangenen Daten anzuzeigen.
 ##### JavaScript-Code:
 Das JavaScript-Skript erstellt eine WebSocket-Verbindung zum Server mit der Adresse ws://192.168.10.211:8765.  
 - socket.onmessage: Diese Funktion wird ausgeführt, wenn eine Nachricht vom Server empfangen wird. Die empfangenen Daten werden aus dem JSON-Format geparst und im data-container-Element angezeigt.
