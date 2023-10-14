@@ -32,7 +32,7 @@ sudo chmod -R 755 /var/www/html/
 ## Anwendung auf dem Server starten
 ```
 python3 /var/www/html/server/websocket_server.py
-# im Terminal werden Meldungen ausgegeben, wenn sich ein Client per Browser verbindet und welche der Server Daten empfängt
+# im Terminal werden Meldungen ausgegeben, wenn sich ein Client per Browser verbindet und welche Daten der Server empfängt
 ```
 ## Empfänger startet Browser
 ```
